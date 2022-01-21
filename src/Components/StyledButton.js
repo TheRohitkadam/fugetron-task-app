@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function StyledButton({ bgcolor, children, onClick }) {
+export default function StyledButton({ bgcolor, children, onClick, type }) {
   const classes = useStyles();
 
   return (
@@ -46,6 +46,7 @@ export default function StyledButton({ bgcolor, children, onClick }) {
       className={classes.margin}
       style={{backgroundColor: bgcolor}}
       onClick={onClick}
+      type={type}
     >
       {children}
     </BootstrapButton>

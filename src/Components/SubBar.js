@@ -44,7 +44,7 @@ export default function SubBar() {
       <Grid container spacing={3}>
         <Grid item xs>
           <BootstrapButton startIcon={<AddIcon style={{ fontSize: 24 }} />}>
-            <NavLink style={ isActive => ({textDecoration: 'none', color: '#5663e1'})} to="/form">Add record</NavLink>
+            <NavLink style={ isActive => ({textDecoration: 'none', color: '#5663e1'})} to="/add-record">Add record</NavLink>
           </BootstrapButton>
         </Grid>
         <Grid item xs={8}></Grid>

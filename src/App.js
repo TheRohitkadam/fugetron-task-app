@@ -10,7 +10,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <Routes>
-          <Route path="/form" element={<Form/>}/>
+          <Route path="/add-record" element={<Form/>}/>
           {/* <Route path="/form" element={<Dialogbox open={true} name="Rohit kadam"/>}/> */}
           <Route path="/" element={<Home/>}/>
         </Routes>

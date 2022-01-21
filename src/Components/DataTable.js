@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -7,6 +7,8 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import { NavLink } from "react-router-dom";
+import axios from "axios";
 import StyledButton from "./StyledButton";
 import Dialogbox from "./Dialogbox";
 
@@ -40,11 +42,28 @@ const useStyles = makeStyles({
   },
 });
 
-export default function DataTable({ data }) {
+export default function DataTable({ data, setData }) {
   const [openDialogbox, setOpenDialogbox] = useState(false);
-  const [selectedElement, setSelectedElement] = useState();
+  const [selectedElement, setSelectedElement] = useState(null);
 
   const classes = useStyles();
+
+  // const removeElement = (data, index) => {};
+
+  async function deleteData(data, email, index) {
+    if (index > -1) {
+      data.splice(index, 1);
+    }
+    // setData({});
+    try {
+      const response = await axios(
+        `https://k6j938wg66.execute-api.us-east-1.amazonaws.com/v1/delete?param1=${email}`
+      );
+      console.log("response", response);
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
 
   return (
     <>
@@ -64,9 +83,9 @@ export default function DataTable({ data }) {
               </StyledTableCell>
             </TableRow>
           </TableHead>
-          {data && data.data && data.data.data.length > 0 ? (
+          {data.length > 0 ? (
             <TableBody>
-              {data.data.data.map((row, index) => (
+              {data.map((row, index) => (
                 <StyledTableRow key={index}>
                   <StyledTableCell>{index + 1}</StyledTableCell>
                   <StyledTableCell>{row.first_name}</StyledTableCell>
@@ -76,12 +95,26 @@ export default function DataTable({ data }) {
                   <StyledTableCell>{row.city}</StyledTableCell>
                   <StyledTableCell>{row.pincode}</StyledTableCell>
                   <StyledTableCell align="center">
-                    <StyledButton bgcolor="#558fc9">EDIT</StyledButton>
+                    <NavLink
+                      to="/add-record"
+                      state={{ row }}
+                      style={(isActive) => ({ textDecoration: "none" })}
+                    >
+                      <StyledButton
+                        bgcolor="#558fc9"
+                        onClick={() => {
+                          setSelectedElement(row);
+                        }}
+                      >
+                        EDIT
+                      </StyledButton>
+                    </NavLink>
                     <StyledButton
                       bgcolor="#c95555"
                       onClick={() => {
                         setSelectedElement(row);
                         setOpenDialogbox(!openDialogbox);
+                        deleteData(data, row.email, index);
                       }}
                     >
                       DELETE
@@ -109,7 +142,9 @@ export default function DataTable({ data }) {
       {selectedElement && (
         <Dialogbox
           open={openDialogbox}
-          name={`${selectedElement.first_name + " " + selectedElement.last_name}`}
+          name={`${
+            selectedElement.first_name + " " + selectedElement.last_name
+          }`}
           onClose={() => setOpenDialogbox(!openDialogbox)}
         />
       )}
